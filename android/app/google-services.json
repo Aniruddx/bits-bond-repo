@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "892759500877",
+    "project_id": "bits-bond",
+    "storage_bucket": "bits-bond.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:892759500877:android:41056c89d90a05c6e61404",
+        "android_client_info": {
+          "package_name": "com.example.bitsbond"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDQQmda3rggrPN0WkB3kgImwWQ9OzL13es"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
