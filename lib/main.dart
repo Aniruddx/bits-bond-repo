@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       title: 'SPARK',
       theme: ThemeData.light().copyWith(
-        scaffoldBackgroundColor: Color.fromARGB(255, 252, 105, 154)
+        scaffoldBackgroundColor: Color.fromARGB(255, 255,179,198)
       ),
       debugShowCheckedModeBanner: false,
       home: LoginScreen(),

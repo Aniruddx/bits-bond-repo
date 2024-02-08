@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-//import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:bitsbond/home/homescreen.dart' show HomeScreen;
-//import 'package:bitsbond/Authentication/image.dart';
+import 'package:bitsbond/home/homescreen.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -18,8 +16,15 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
-    _auth.authStateChanges().listen((event) {
-      setState(() {});
+    _auth.authStateChanges().listen((user) {
+      if (user != null) {
+        // User is already logged in, navigate to home screen
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => HomeScreen(userId: user.uid),
+          ),
+        );
+      }
     });
   }
 
@@ -52,15 +57,16 @@ class _LoginScreenState extends State<LoginScreen> {
         onPressed: () {
           googleLogin(context);
         },
-        color: Colors.white,
+        color: Color.fromARGB(255, 255,143,171),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Text(
             'BITS Email Login',
             style: TextStyle(
               color: Colors.black,
-              fontSize: 20,
-              letterSpacing: 1.5,
+              fontFamily: 'LemonDays',
+              letterSpacing: 2,
+              fontSize: 20
             ),
           ),
         ),
@@ -69,7 +75,6 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   googleLogin(BuildContext context) async {
-    print("googleLogin method Called");
     GoogleSignIn _googleSignIn = GoogleSignIn();
     try {
       var googleSignInAccount = await _googleSignIn.signIn();
@@ -85,11 +90,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
       var finalResult = await _auth.signInWithCredential(credential);
 
-      print("Result $finalResult");
-      print(finalResult.user!.displayName);
-      print(finalResult.user!.email);
-      print(finalResult.user!.photoURL);
-
       await storeUserDataInFirestore(finalResult.user!, finalResult.user!.photoURL!);
 
       Navigator.of(context).pushReplacement(
@@ -102,7 +102,7 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  Future<void> storeUserDataInFirestore(User user, String photoUrl) async {
+  Future<void> storeUserDataInFirestore(user, String photoUrl) async {
     try {
       CollectionReference users = FirebaseFirestore.instance.collection('users');
 
@@ -116,15 +116,3 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 }
- /*checkifUserLoggedIn(User? user){
-  if(user == null){
-
-  }
-  else {
-    Get.to(HomeScreen(userId: '',));
-  }
- }
- @override 
- void onReady(){
-
- }*/

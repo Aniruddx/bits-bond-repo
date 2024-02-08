@@ -1,4 +1,5 @@
 // home_screen.dart
+import 'package:bitsbond/home/chat.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'profile.dart';
@@ -20,119 +21,175 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 252, 105, 154),
+        backgroundColor: Color.fromARGB(255, 255,143,171),
         elevation: 0,
         automaticallyImplyLeading: false,
         title: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              'SPARK',
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 2,
-              ),
-            ),
-            SizedBox(
-              width: 146,
-            ),
-            IconButton(
-              icon: Icon(
-                Icons.person_2_sharp,
-                color: Colors.black,
-              ),
-              onPressed: () {
-                // Navigate to profile screen
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Profile()),
-                );
-              },
-            ),
-            IconButton(
-              icon: Icon(
-                Icons.chat_bubble_outline_sharp,
-                color: Colors.black,
-              ),
-              onPressed: () {
-                print('object');
-              },
-            )
+                Text(
+                  'SPARK',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 40,
+                    //fontWeight: FontWeight.bold,
+                    fontFamily: 'CandyLove',
+                    letterSpacing: 2,
+                  ),
+                ),
+                //SizedBox(
+                //  width: 146,
+                //),
+                Container(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                  IconButton(
+                    icon: Icon(
+                      Icons.person_2_sharp,
+                      color: Colors.black,
+                    ),
+                    onPressed: () {
+                      // Navigate to profile screen
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Profile()),
+                      );
+                    },
+                  ),
+                  IconButton(
+                    icon: Icon(
+                      Icons.chat_bubble_outline_sharp,
+                      color: Colors.black,
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Chat()),
+                      );
+                    },
+                  )
+                    
+                              ],
+                            ),
+                ),
           ],
         ),
       ),
-      backgroundColor: Color.fromARGB(255, 252, 105, 154),
+      backgroundColor: Color.fromARGB(255, 255,179,198),
 
       // BODY:
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "People you'd like to date :",
-              style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
-            ),
-            SizedBox(height: 2,),
-            Text(
-              'You can add up to 5 names',
-              style: TextStyle(
-                  fontSize: 10,
-                  //fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w300),
-            ),
-            SizedBox(height: 5,),
-            TextField(
-              controller: _crushController,
-              decoration: InputDecoration(
-                hintText: 'Search in caps lock :)',
-                filled: true,
-                fillColor: Color.fromARGB(255, 253, 140, 178),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                  borderSide: BorderSide.none,
-                ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "People you'd like to date :",
+                style: TextStyle(
+                  fontSize: 25, 
+                  fontWeight: FontWeight.w500,
+                  fontFamily: 'LemonDays',
+                  letterSpacing: 2),
               ),
-              onChanged: (value) {
-                _searchCrushSuggestions(value);
-              },
-            ),
-            SizedBox(height: 5),
-            //Text('Choose from suggestions:'),
-            SizedBox(
-              height: 200,
-              child: ListView.builder(
-                itemCount: suggestions.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(suggestions[index].name),
-                    subtitle: Text(suggestions[index].email),
-                    onTap: () {
-                      _addCrush(suggestions[index]);
-                    },
-                  );
+              SizedBox(height: 2,),
+              Text(
+                'You can add up to 5 names',
+                style: TextStyle(
+                    fontSize: 10,
+                    fontFamily: 'LemonDays',
+                    //fontStyle: FontStyle.italic,
+                    fontWeight: FontWeight.w100),
+              ),
+              SizedBox(height: 5,),
+              TextField(
+                controller: _crushController,
+                decoration: InputDecoration(
+                  hintText: 'Search in caps lock :)',
+                  hintStyle: TextStyle(
+                    fontFamily: 'LemonDays',
+                  ),
+                  filled: true,
+                  fillColor: Color.fromARGB(255, 255,143,171),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    borderSide: BorderSide.none,
+                  ),
+                ),
+                onChanged: (value) {
+                  _searchCrushSuggestions(value);
                 },
               ),
-            ),
-            SizedBox(height: 20),
-            Text('Your Crush List:',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: selectedCrushes.map((crush) => Text(crush.name)).toList(),
-            ),
-            SizedBox(height: 100),
-            ElevatedButton(
-              onPressed: _updateCrushList,
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
+              SizedBox(height: 5),
+              //Text('Choose from suggestions:'),
+              SizedBox(
+                height: 200,
+                child: ListView.builder(
+                  itemCount: suggestions.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: Text(suggestions[index].name,
+                      /*style: TextStyle(
+                        color: Colors.black,
+                        fontFamily: 'LemonDays',
+                        letterSpacing: 2
+                      ),*/),
+                      subtitle: Text(suggestions[index].email,
+                      /*style: TextStyle(
+                        color: Colors.black,
+                        fontFamily: 'LemonDays',
+                        letterSpacing: 2
+                      ),*/
+                      ),
+                      onTap: () {
+                        _addCrush(suggestions[index]);
+                      },
+                    );
+                  },
+                ),
               ),
-              child: Text('Save Crush List'),
-            ),
-          ],
+              SizedBox(height: 20),
+              Container(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Your Crush List:',
+                    style: TextStyle(fontSize: 20, 
+                      fontWeight: FontWeight.w500,
+                      fontFamily: 'LemonDays',
+                      letterSpacing: 2
+                      )),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: selectedCrushes.map((crush) => Text(crush.name,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontFamily: 'LemonDays',
+                        letterSpacing: 2
+                      ))).toList(),
+                    ),
+                    //SizedBox(height: 100),
+                    ElevatedButton(
+                      onPressed: _updateCrushList,
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(Color.fromARGB(255, 255,143,171)),
+                      ),
+                      child: Text('Save',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontFamily: 'LemonDays',
+                        letterSpacing: 2
+                      ),),
+                    ),
+                    
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -149,7 +206,7 @@ class _HomeScreenState extends State<HomeScreen> {
         setState(() {
           suggestions = querySnapshot.docs
               .map((document) => User.fromDocument(document))
-              .toList();
+              .toList(); 
         });
       });
     } else {
